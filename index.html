@@ -3,80 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nitro Code Generator (Demo)</title>
+  <title>Auto Nitro Code Generator & Saver (Demo)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 50px;
       transition: background-color 0.3s ease;
+      color: white;
     }
     h1 {
+      margin-bottom: 20px;
+    }
+    #code {
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 4px;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 12px;
+      display: inline-block;
+      min-width: 260px;
+    }
+    #savedCodes {
+      margin-top: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      background: rgba(0,0,0,0.3);
+      padding: 15px 20px;
+      border-radius: 12px;
+      height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 18px;
+      word-break: break-all;
+    }
+    #controls {
       margin-bottom: 30px;
     }
     button {
-      padding: 15px 30px;
-      font-size: 18px;
+      padding: 12px 25px;
+      font-size: 16px;
       cursor: pointer;
       border: none;
       border-radius: 8px;
       background-color: #333;
       color: white;
       transition: background-color 0.3s ease;
+      margin: 0 10px;
     }
     button:hover {
       background-color: #555;
     }
-    #code {
-      margin-top: 40px;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 4px;
-    }
-    #status {
-      margin-top: 30px;
-      font-size: 22px;
-      font-weight: bold;
-      color: white;
-      padding: 15px;
-      border-radius: 12px;
-      display: inline-block;
-      min-width: 260px;
-    }
   </style>
 </head>
 <body>
-  <h1>Discord Nitro Code Generator (Demo)</h1>
-  <button onclick="generateCode()">Generate Nitro Code</button>
+  <h1>Auto Discord Nitro Code Generator (Demo)</h1>
 
-  <div id="code"></div>
+  <div id="controls">
+    <button onclick="startGenerating()" id="startBtn">Start</button>
+    <button onclick="stopGenerating()" id="stopBtn" disabled>Stop</button>
+  </div>
+
+  <div id="code">Press Start to generate codes...</div>
   <div id="status"></div>
 
-  <script>
-    function generateCode() {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let code = '';
-      const length = 16;
+  <h2>Saved Valid Codes:</h2>
+  <div id="savedCodes">(No codes saved yet)</div>
 
-      for (let i = 0; i < length; i++) {
+  <script>
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const codeLength = 16;
+    let intervalId = null;
+    const savedValidCodes = new Set();
+
+    function generateRandomCode() {
+      let code = '';
+      for (let i = 0; i < codeLength; i++) {
         code += characters.charAt(Math.floor(Math.random() * characters.length));
       }
+      return code;
+    }
 
-      document.getElementById('code').textContent = `discord.gift/${code}`;
+    function updateSavedCodesDisplay() {
+      const savedCodesDiv = document.getElementById('savedCodes');
+      if (savedValidCodes.size === 0) {
+        savedCodesDiv.textContent = '(No codes saved yet)';
+      } else {
+        savedCodesDiv.innerHTML = '';
+        savedValidCodes.forEach(code => {
+          const p = document.createElement('p');
+          p.textContent = `discord.gift/${code}`;
+          savedCodesDiv.appendChild(p);
+        });
+      }
+    }
 
-      // 50% chance of valid now
-      const isValid = Math.random() < 0.5;
+    function generateAndCheck() {
+      const code = generateRandomCode();
+      const isValid = Math.random() < 0.5; // 50% valid chance
 
+      const codeDiv = document.getElementById('code');
       const statusDiv = document.getElementById('status');
+
+      codeDiv.textContent = `discord.gift/${code}`;
 
       if (isValid) {
         document.body.style.backgroundColor = '#28a745'; // green
         statusDiv.textContent = 'Valid Nitro Code!';
         statusDiv.style.backgroundColor = '#218838';
+
+        if (!savedValidCodes.has(code)) {
+          savedValidCodes.add(code);
+          updateSavedCodesDisplay();
+        }
       } else {
         document.body.style.backgroundColor = '#dc3545'; // red
         statusDiv.textContent = 'Invalid Nitro Code.';
         statusDiv.style.backgroundColor = '#c82333';
+      }
+    }
+
+    function startGenerating() {
+      if (!intervalId) {
+        generateAndCheck(); // immediate first generation
+        intervalId = setInterval(generateAndCheck, 1000); // every 1 second
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+      }
+    }
+
+    function stopGenerating() {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+        document.body.style.backgroundColor = ''; // reset background
+        document.getElementById('status').textContent = '';
+        document.getElementById('status').style.backgroundColor = 'transparent';
       }
     }
   </script>
