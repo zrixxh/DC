@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Discord Nitro Link Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      transition: background-color 0.3s ease;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    #status {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      min-width: 220px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Discord Nitro Link Checker</h1>
+  <input type="text" id="inputLink" placeholder="Paste a Discord Nitro link here..." />
+  <br />
+  <button onclick="checkNitro()">Check Link</button>
+
+  <div id="status"></div>
+
+  <script>
+    function checkNitro() {
+      const input = document.getElementById('inputLink').value.trim();
+
+      // Nitro link regex pattern
+      const nitroRegex = /https?:\/\/(discord\.gift|discordapp\.com\/gifts)\/[a-zA-Z0-9\-]+/i;
+
+      const statusDiv = document.getElementById('status');
+
+      if (nitroRegex.test(input)) {
+        // Green background for valid Nitro link
+        document.body.style.backgroundColor = '#28a745'; // Bootstrap green
+        statusDiv.textContent = "Valid Discord Nitro link found!";
+        statusDiv.style.backgroundColor = '#218838';
+      } else {
+        // Red background for no valid link
+        document.body.style.backgroundColor = '#dc3545'; // Bootstrap red
+        statusDiv.textContent = "No valid Discord Nitro link detected.";
+        statusDiv.style.backgroundColor = '#c82333';
+      }
+    }
+  </script>
+</body>
+</html>
