@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Auto Nitro Code Generator & Saver (Demo)</title>
+  <title>Discord Nitro Code Generator with YouTube Subscribe Gate</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -62,17 +62,40 @@
     button:hover {
       background-color: #555;
     }
+    #subscribeNotice {
+      margin-bottom: 20px;
+      font-size: 18px;
+      background: #444;
+      padding: 15px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    a.youtube-link {
+      color: #ff0000;
+      font-weight: bold;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Auto Discord Nitro Code Generator (Demo)</h1>
+  <h1>Discord Nitro Code Generator (Subscribe to Unlock Auto)</h1>
 
-  <div id="controls">
-    <button onclick="startGenerating()" id="startBtn">Start</button>
-    <button onclick="stopGenerating()" id="stopBtn" disabled>Stop</button>
+  <div id="subscribeNotice">
+    Please <a href="https://www.youtube.com/@COD-hope" target="_blank" class="youtube-link">subscribe to my YouTube channel</a> to unlock auto-generation.<br />
+    Have you subscribed? Click below!
   </div>
 
-  <div id="code">Press Start to generate codes...</div>
+  <button id="confirmSubBtn">Yes, I subscribed!</button>
+
+  <div id="controls" style="display:none;">
+    <button onclick="startGenerating()" id="startBtn">Start Auto Generate</button>
+    <button onclick="stopGenerating()" id="stopBtn" disabled>Stop Auto Generate</button>
+    <button onclick="generateAndCheck()" id="manualBtn">Manual Generate</button>
+  </div>
+
+  <div id="code">Press "Manual Generate" or start auto-generate...</div>
   <div id="status"></div>
 
   <h2>Saved Valid Codes:</h2>
@@ -108,24 +131,21 @@
 
     function generateAndCheck() {
       const code = generateRandomCode();
-      const isValid = Math.random() < 0.5; // 50% valid chance
+      const isValid = Math.random() < 0.5;
 
-      const codeDiv = document.getElementById('code');
+      document.getElementById('code').textContent = `discord.gift/${code}`;
       const statusDiv = document.getElementById('status');
 
-      codeDiv.textContent = `discord.gift/${code}`;
-
       if (isValid) {
-        document.body.style.backgroundColor = '#28a745'; // green
+        document.body.style.backgroundColor = '#28a745';
         statusDiv.textContent = 'Valid Nitro Code!';
         statusDiv.style.backgroundColor = '#218838';
-
         if (!savedValidCodes.has(code)) {
           savedValidCodes.add(code);
           updateSavedCodesDisplay();
         }
       } else {
-        document.body.style.backgroundColor = '#dc3545'; // red
+        document.body.style.backgroundColor = '#dc3545';
         statusDiv.textContent = 'Invalid Nitro Code.';
         statusDiv.style.backgroundColor = '#c82333';
       }
@@ -133,8 +153,8 @@
 
     function startGenerating() {
       if (!intervalId) {
-        generateAndCheck(); // immediate first generation
-        intervalId = setInterval(generateAndCheck, 1000); // every 1 second
+        generateAndCheck();
+        intervalId = setInterval(generateAndCheck, 1000);
         document.getElementById('startBtn').disabled = true;
         document.getElementById('stopBtn').disabled = false;
       }
@@ -146,10 +166,25 @@
         intervalId = null;
         document.getElementById('startBtn').disabled = false;
         document.getElementById('stopBtn').disabled = true;
-        document.body.style.backgroundColor = ''; // reset background
+        document.body.style.backgroundColor = '';
         document.getElementById('status').textContent = '';
         document.getElementById('status').style.backgroundColor = 'transparent';
       }
+    }
+
+    // Subscription gating
+    const confirmSubBtn = document.getElementById('confirmSubBtn');
+    const subscribeNotice = document.getElementById('subscribeNotice');
+    const controlsDiv = document.getElementById('controls');
+
+    confirmSubBtn.addEventListener('click', () => {
+      subscribeNotice.style.display = 'none';
+      confirmSubBtn.style.display = 'none';
+      controlsDiv.style.display = 'block';
+    });
+
+    window.onload = () => {
+      controlsDiv.style.display = 'none';
     }
   </script>
 </body>
