@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Discord Nitro Link Checker</title>
+  <title>Nitro Code Generator (Demo)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,20 +14,12 @@
     h1 {
       margin-bottom: 30px;
     }
-    input {
-      width: 80%;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-    }
     button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 15px 30px;
+      font-size: 18px;
       cursor: pointer;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       background-color: #333;
       color: white;
       transition: background-color 0.3s ease;
@@ -35,44 +27,56 @@
     button:hover {
       background-color: #555;
     }
+    #code {
+      margin-top: 40px;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 4px;
+    }
     #status {
       margin-top: 30px;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       padding: 15px;
-      border-radius: 10px;
+      border-radius: 12px;
       display: inline-block;
-      min-width: 220px;
+      min-width: 260px;
     }
   </style>
 </head>
 <body>
-  <h1>Discord Nitro Link Checker</h1>
-  <input type="text" id="inputLink" placeholder="Paste a Discord Nitro link here..." />
-  <br />
-  <button onclick="checkNitro()">Check Link</button>
+  <h1>Discord Nitro Code Generator (Demo)</h1>
+  <button onclick="generateCode()">Generate Nitro Code</button>
 
+  <div id="code"></div>
   <div id="status"></div>
 
   <script>
-    function checkNitro() {
-      const input = document.getElementById('inputLink').value.trim();
+    function generateCode() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let code = '';
+      // Nitro gift codes are typically 16 characters, sometimes 24
+      const length = 16;
 
-      // Nitro link regex pattern
-      const nitroRegex = /https?:\/\/(discord\.gift|discordapp\.com\/gifts)\/[a-zA-Z0-9\-]+/i;
+      for (let i = 0; i < length; i++) {
+        code += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+
+      document.getElementById('code').textContent = `discord.gift/${code}`;
+
+      // Fake "check" result - randomly valid or invalid
+      const isValid = Math.random() < 0.1; // 10% chance to be "valid"
 
       const statusDiv = document.getElementById('status');
 
-      if (nitroRegex.test(input)) {
-        // Green background for valid Nitro link
-        document.body.style.backgroundColor = '#28a745'; // Bootstrap green
-        statusDiv.textContent = "Valid Discord Nitro link found!";
+      if (isValid) {
+        document.body.style.backgroundColor = '#28a745'; // green
+        statusDiv.textContent = 'Valid Nitro Code!';
         statusDiv.style.backgroundColor = '#218838';
       } else {
-        // Red background for no valid link
-        document.body.style.backgroundColor = '#dc3545'; // Bootstrap red
-        statusDiv.textContent = "No valid Discord Nitro link detected.";
+        document.body.style.backgroundColor = '#dc3545'; // red
+        statusDiv.textContent = 'Invalid Nitro Code.';
         statusDiv.style.backgroundColor = '#c82333';
       }
     }
