@@ -56,7 +56,6 @@
     function generateCode() {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let code = '';
-      // Nitro gift codes are typically 16 characters, sometimes 24
       const length = 16;
 
       for (let i = 0; i < length; i++) {
@@ -65,8 +64,8 @@
 
       document.getElementById('code').textContent = `discord.gift/${code}`;
 
-      // Fake "check" result - randomly valid or invalid
-      const isValid = Math.random() < 0.1; // 10% chance to be "valid"
+      // 50% chance of valid now
+      const isValid = Math.random() < 0.5;
 
       const statusDiv = document.getElementById('status');
 
